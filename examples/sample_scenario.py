@@ -48,9 +48,9 @@ def create_sample_scenario():
             )
         ],
         riders=[
-            Rider("R1", 2),
-            Rider("R2", 2),
-            Rider("R3", 2)
+            Rider("R1", 3),
+            Rider("R2", 3),
+            Rider("R3", 3)
         ],
         average_speed_kmph=30
     )
