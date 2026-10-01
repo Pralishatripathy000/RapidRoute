@@ -1,4 +1,4 @@
 orders,riders,baseline_distance_km,optimized_distance_km,distance_saved_km,savings_percentage,runtime_seconds
-10,2,48.009,35.642,12.367,25.76,2.006
+10,2,48.009,35.642,12.367,25.76,2.007
 20,3,79.503,48.047,31.456,39.57,2.002
-30,4,104.095,62.749,41.346,39.72,2.001
+30,4,104.095,62.749,41.346,39.72,2.002
