@@ -12,6 +12,10 @@ from src.optimizers.vehicle_routing import (
     optimize_routes
 )
 
+from src.utils.metrics import (
+    evaluate_routes
+)
+
 
 def display_routes(title, result):
     print(f"\n{title}")
@@ -19,7 +23,7 @@ def display_routes(title, result):
 
     for rider_id, route in result["routes"].items():
         route_text = (
-            "Depot"
+            "No assigned orders"
             if not route
             else "Depot -> "
             + " -> ".join(route)
@@ -38,26 +42,38 @@ def display_routes(title, result):
             f"Distance: {distance:.3f} km"
         )
 
-        if "arrival_times" in result:
-            arrivals = result[
-                "arrival_times"
-            ][rider_id]
-
-            if arrivals:
-                formatted_arrivals = ", ".join(
-                    f"{order_id}: {time} min"
-                    for order_id, time
-                    in arrivals.items()
-                )
-
-                print(
-                    f"Arrivals: {formatted_arrivals}"
-                )
-
     print(
         f"\nTotal distance: "
         f"{result['total_distance_km']:.3f} km"
     )
+
+
+def display_metrics(metrics):
+    print(
+        f"On-time deliveries: "
+        f"{metrics['on_time_orders']}/"
+        f"{metrics['total_orders']} "
+        f"({metrics['on_time_percentage']:.1f}%)"
+    )
+
+    print(
+        f"Average delivery time: "
+        f"{metrics['average_delivery_time_minutes']:.2f} "
+        f"minutes"
+    )
+
+    print(
+        f"Average rider utilization: "
+        f"{metrics['average_rider_utilization_percentage']:.2f}%"
+    )
+
+    if metrics["late_orders"]:
+        print(
+            "Late orders: "
+            + ", ".join(metrics["late_orders"])
+        )
+    else:
+        print("Late orders: None")
 
 
 def main():
@@ -76,9 +92,23 @@ def main():
         time_limit_seconds=3
     )
 
+    baseline_metrics = evaluate_routes(
+        scenario,
+        baseline
+    )
+
+    optimized_metrics = evaluate_routes(
+        scenario,
+        optimized
+    )
+
     display_routes(
         "Greedy Baseline",
         baseline
+    )
+
+    display_metrics(
+        baseline_metrics
     )
 
     display_routes(
@@ -86,18 +116,22 @@ def main():
         optimized
     )
 
+    display_metrics(
+        optimized_metrics
+    )
+
     distance_saved = (
         baseline["total_distance_km"]
         - optimized["total_distance_km"]
     )
 
-    if baseline["total_distance_km"] > 0:
-        improvement_percentage = (
-            distance_saved
-            / baseline["total_distance_km"]
-        ) * 100
-    else:
-        improvement_percentage = 0
+    improvement_percentage = (
+        distance_saved
+        / baseline["total_distance_km"]
+        * 100
+        if baseline["total_distance_km"] > 0
+        else 0
+    )
 
     print("\nComparison")
     print("----------")
@@ -110,6 +144,12 @@ def main():
     print(
         f"Relative improvement: "
         f"{improvement_percentage:.2f}%"
+    )
+
+    print(
+        f"Late-order reduction: "
+        f"{len(baseline_metrics['late_orders'])} -> "
+        f"{len(optimized_metrics['late_orders'])}"
     )
 
 
