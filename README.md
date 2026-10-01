@@ -2,58 +2,107 @@
 
 Quick commerce promises delivery in minutes. The routes, unfortunately, do not optimize themselves.
 
-RapidRoute is an Operations Research experiment focused on assigning orders to riders, batching compatible deliveries and finding efficient routes from a single dark store.
+RapidRoute is an Operations Research experiment for assigning orders to riders, batching compatible deliveries and optimizing routes from a single dark store.
 
-## Problem
+## What It Handles
 
-A quick-commerce system must decide:
-
-- Which rider should handle each order?
-- Which orders can be delivered together?
-- In what sequence should deliveries occur?
-- Can capacity and delivery deadlines be satisfied?
-
-## Planned Scope
-
-- Single dark store
 - Multiple riders and customer orders
 - Rider capacity constraints
 - Delivery deadlines
-- Order-to-rider assignment
-- Order batching
-- Vehicle route optimization
+- Order-to-rider allocation
+- Delivery sequencing
 - Dynamic insertion of new orders
-- Comparison with a simple delivery baseline
+- Route reoptimization
+- Greedy versus optimized route comparison
+- Reproducible benchmark experiments
 
-## Evaluation Metrics
+## Optimization Approach
 
-- Total delivery distance
-- Average delivery time
-- Delayed orders
-- Rider utilization
-- Optimization runtime
+RapidRoute models delivery planning as a Capacitated Vehicle Routing Problem with delivery deadlines.
 
-## Technology
+Google OR-Tools is used to minimize total route distance while ensuring:
 
-- Python
-- Google OR-Tools
-- NumPy
-- pandas
-- Matplotlib
+- Every order is assigned exactly once
+- Rider capacities are respected
+- Orders are delivered before their deadlines
+- Every route begins and ends at the dark store
+
+A deadline-first greedy dispatcher provides the comparison baseline.
+
+## Benchmark Results
+
+The following results use seeded synthetic delivery scenarios, Euclidean distances and a two-second solver limit.
+
+| Orders | Riders | Greedy baseline | Optimized | Distance saved | Runtime |
+|---:|---:|---:|---:|---:|---:|
+| 10 | 2 | 48.009 km | 35.642 km | 25.76% | 2.006 s |
+| 20 | 3 | 79.503 km | 48.047 km | 39.57% | 2.002 s |
+| 30 | 4 | 104.095 km | 62.749 km | 39.72% | 2.001 s |
+
+These results demonstrate performance on the included scenarios and are not claims about real-world delivery networks.
+
+## Visual Results
+
+![Route comparison](visuals/route_comparison.png)
+
+![Benchmark comparison](visuals/benchmark_comparison.png)
+
+## Run the Project
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Run the standard comparison:
+
+```bash
+python main.py
+```
+
+Run dynamic order insertion:
+
+```bash
+python -m examples.dynamic_order_demo
+```
+
+Run the benchmark:
+
+```bash
+python -m examples.benchmark
+```
+
+Generate visualizations:
+
+```bash
+python -m examples.plot_routes
+python -m examples.plot_benchmark
+```
+
+Run all tests:
+
+```bash
+python -m unittest discover tests
+```
 
 ## Project Structure
 
 ```text
-src/optimizers/   Assignment and routing algorithms
-src/simulation/   Orders, riders and delivery simulation
-src/utils/        Shared utilities
-data/             Input and generated datasets
-examples/         Example scenarios
+src/optimizers/   Greedy and OR-Tools routing algorithms
+src/simulation/   Scenario generation and dynamic dispatch
+src/utils/        Distance, time and visualization utilities
+examples/         Runnable experiments
 tests/            Automated tests
-results/          Experiment results
-visuals/          Route visualizations
+results/          Benchmark output
+visuals/          Generated route and benchmark plots
 ```
 
-## Status
+## Current Limitations
 
-Currently under development—one route, constraint and questionable delivery deadline at a time.
+- Uses synthetic Cartesian coordinates
+- Uses Euclidean distance instead of a real road network
+- Reoptimizes complete routes after a new order
+- Does not model live traffic or rider movement
+
+RapidRoute is intentionally an OR experiment rather than a production delivery platform—one route, constraint and questionable deadline at a time.
