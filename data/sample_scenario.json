@@ -1,0 +1,65 @@
+{
+  "depot": {
+    "x": 0,
+    "y": 0
+  },
+  "average_speed_kmph": 30,
+  "orders": [
+    {
+      "order_id": "O1",
+      "x": 1,
+      "y": 2,
+      "demand": 1,
+      "deadline_minutes": 15
+    },
+    {
+      "order_id": "O2",
+      "x": 2,
+      "y": 1,
+      "demand": 1,
+      "deadline_minutes": 18
+    },
+    {
+      "order_id": "O3",
+      "x": 4,
+      "y": 3,
+      "demand": 1,
+      "deadline_minutes": 25
+    },
+    {
+      "order_id": "O4",
+      "x": 5,
+      "y": 2,
+      "demand": 1,
+      "deadline_minutes": 28
+    },
+    {
+      "order_id": "O5",
+      "x": 7,
+      "y": 6,
+      "demand": 1,
+      "deadline_minutes": 40
+    },
+    {
+      "order_id": "O6",
+      "x": 8,
+      "y": 7,
+      "demand": 1,
+      "deadline_minutes": 45
+    }
+  ],
+  "riders": [
+    {
+      "rider_id": "R1",
+      "capacity": 3
+    },
+    {
+      "rider_id": "R2",
+      "capacity": 3
+    },
+    {
+      "rider_id": "R3",
+      "capacity": 3
+    }
+  ]
+}
